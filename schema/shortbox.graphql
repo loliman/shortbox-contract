@@ -1,0 +1,369 @@
+scalar Date
+scalar DateTime
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type Query {
+  _empty: String
+  me: User
+  nodes(pattern: String!, us: Boolean!, offset: Int): [Node]
+  export(filter: Filter!, type: String!): String
+  publishers(pattern: String, us: Boolean!, first: Int, after: String, filter: Filter): PublisherConnection
+  publisher(publisher: PublisherInput!): Publisher
+  series(pattern: String, publisher: PublisherInput!, first: Int, after: String, filter: Filter): SeriesConnection
+  seriesd(series: SeriesInput!): Series
+  issues(pattern: String, series: SeriesInput!, first: Int, after: String, filter: Filter): IssueConnection
+  issue(issue: IssueInput!, edit: Boolean): Issue
+  lastEdited(filter: Filter, first: Int, after: String, order: String, direction: String): IssueConnection
+  arcs(pattern: String, type: String, first: Int, after: String): ArcConnection
+  individuals(pattern: String, first: Int, after: String): IndividualConnection
+  apps(pattern: String, type: String, first: Int, after: String): AppearanceConnection
+}
+
+type Mutation {
+  _empty: String
+  login(credentials: LoginInput!): User!
+  logout: Boolean!
+  deletePublisher(item: PublisherInput!): Boolean
+  createPublisher(item: PublisherInput!): Publisher
+  editPublisher(old: PublisherInput!, item: PublisherInput!): Publisher
+  deleteSeries(item: SeriesInput!): Boolean
+  createSeries(item: SeriesInput!): Series
+  editSeries(old: SeriesInput!, item: SeriesInput!): Series
+  deleteIssue(item: IssueInput!): Boolean
+  createIssue(item: IssueInput!): Issue
+  editIssue(old: IssueInput!, item: IssueInput!): Issue
+}
+
+type Node {
+  type: String
+  label: String
+  url: String
+}
+
+input DateFilter {
+  date: Date
+  compare: String
+}
+
+input NumberFilter {
+  number: String
+  compare: String
+  variant: String
+}
+
+input Filter {
+  us: Boolean!
+  formats: [String]
+  withVariants: Boolean
+  releasedates: [DateFilter]
+  publishers: [PublisherInput]
+  series: [SeriesInput]
+  numbers: [NumberFilter]
+  arcs: String
+  individuals: [IndividualInput]
+  appearances: String
+  firstPrint: Boolean
+  onlyPrint: Boolean
+  onlyTb: Boolean
+  exclusive: Boolean
+  reprint: Boolean
+  otherOnlyTb: Boolean
+  noPrint: Boolean
+  onlyOnePrint: Boolean
+  onlyCollected: Boolean
+  onlyNotCollected: Boolean
+  sellable: Boolean
+  noCover: Boolean
+  noContent: Boolean
+  and: Boolean
+}
+
+input LoginInput {
+  name: String!
+  password: String!
+}
+
+type User {
+  id: ID
+}
+
+type PublisherConnection {
+  edges: [PublisherEdge]
+  pageInfo: PageInfo!
+}
+
+type PublisherEdge {
+  cursor: String!
+  node: Publisher
+}
+
+input PublisherInput {
+  id: String
+  name: String
+  us: Boolean
+  addinfo: String
+  startyear: Int
+  endyear: Int
+}
+
+type Publisher {
+  id: ID
+  name: String
+  series: [Series]
+  us: Boolean
+  seriesCount: Int
+  issueCount: Int
+  lastEdited(limit: Int): [Issue]
+  firstIssue: Issue
+  lastIssue: Issue
+  active: Boolean
+  startyear: Int
+  endyear: Int
+  addinfo: String
+}
+
+type SeriesConnection {
+  edges: [SeriesEdge]
+  pageInfo: PageInfo!
+}
+
+type SeriesEdge {
+  cursor: String!
+  node: Series
+}
+
+input SeriesInput {
+  id: String
+  title: String
+  startyear: Int
+  endyear: Int
+  volume: Int
+  addinfo: String
+  publisher: PublisherInput
+}
+
+type Series {
+  id: ID
+  title: String
+  startyear: Int
+  endyear: Int
+  volume: Int
+  issueCount: Int
+  firstIssue: Issue
+  lastIssue: Issue
+  lastEdited(limit: Int): [Issue]
+  active: Boolean
+  addinfo: String
+  publisher: Publisher
+}
+
+type IssueConnection {
+  edges: [IssueEdge]
+  pageInfo: PageInfo!
+}
+
+type IssueEdge {
+  cursor: String!
+  node: Issue
+}
+
+input IssueInput {
+  id: String
+  title: String
+  number: String
+  format: String
+  variant: String
+  releasedate: Date
+  pages: Int
+  price: Float
+  currency: String
+  isbn: String
+  limitation: String
+  addinfo: String
+  series: SeriesInput
+}
+
+type Issue {
+  id: ID
+  title: String
+  number: String
+  format: String
+  variant: String
+  releasedate: Date
+  pages: Int
+  price: Float
+  currency: String
+  isbn: String
+  limitation: String
+  addinfo: String
+  verified: Boolean
+  collected: Boolean
+  comicguideid: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  series: Series
+  stories: [Story]
+  cover: Cover
+  covers: [Cover]
+  individuals: [Individual]
+  arcs: [Arc]
+  features: [Feature]
+  variants: [Issue]
+  tags: [String]
+}
+
+input StoryInput {
+  number: Int!
+  title: String
+  parent: StoryInput
+  reprintOf: StoryInput
+  issue: IssueInput
+  individuals: [IndividualInput]
+  appearances: [AppearanceInput]
+  onlyapp: Boolean
+  firstapp: Boolean
+  onlytb: Boolean
+  otheronlytb: Boolean
+  onlyoneprint: Boolean
+  collected: Boolean
+  addinfo: String
+  part: String
+  exclusive: Boolean
+}
+
+type Story {
+  id: ID
+  number: Int
+  title: String
+  parent: Story
+  reprintOf: Story
+  reprints: [Story]
+  children: [Story]
+  issue: Issue
+  individuals: [Individual]
+  appearances: [Appearance]
+  onlyapp: Boolean
+  firstapp: Boolean
+  onlytb: Boolean
+  otheronlytb: Boolean
+  onlyoneprint: Boolean
+  collected: Boolean
+  addinfo: String
+  part: String
+  exclusive: Boolean
+  collectedmultipletimes: Boolean
+}
+
+input CoverInput {
+  number: Int!
+  parent: CoverInput
+  issue: IssueInput
+  individuals: [IndividualInput]
+  addinfo: String
+  exclusive: Boolean
+}
+
+type Cover {
+  id: ID
+  url: String
+  number: Int
+  addinfo: String
+  parent: Cover
+  children: [Cover]
+  onlyapp: Boolean
+  firstapp: Boolean
+  exclusive: Boolean
+  issue: Issue
+  individuals: [Individual]
+}
+
+type ArcConnection {
+  edges: [ArcEdge]
+  pageInfo: PageInfo!
+}
+
+type ArcEdge {
+  cursor: String!
+  node: Arc
+}
+
+input ArcInput {
+  id: String
+  title: String
+  type: String
+}
+
+type Arc {
+  id: ID
+  title: String
+  type: String
+  issues: [Issue]
+}
+
+type IndividualConnection {
+  edges: [IndividualEdge]
+  pageInfo: PageInfo!
+}
+
+type IndividualEdge {
+  cursor: String!
+  node: Individual
+}
+
+input IndividualInput {
+  name: String
+  type: [String]
+}
+
+type Individual {
+  id: ID
+  name: String
+  type: [String]
+}
+
+type AppearanceConnection {
+  edges: [AppearanceEdge]
+  pageInfo: PageInfo!
+}
+
+type AppearanceEdge {
+  cursor: String!
+  node: Appearance
+}
+
+input AppearanceInput {
+  id: String
+  name: String
+  type: String
+  role: String
+}
+
+type Appearance {
+  id: ID
+  name: String
+  type: String
+  role: String
+}
+
+input FeatureInput {
+  id: String
+  number: Int!
+  individuals: [IndividualInput]
+  title: String
+  addinfo: String
+}
+
+type Feature {
+  id: ID
+  title: String
+  number: Int
+  addinfo: String
+  issue: Issue
+  individuals: [Individual]
+}

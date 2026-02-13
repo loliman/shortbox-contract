@@ -1,0 +1,11 @@
+overwrite: true
+schema: "./schema/shortbox.graphql"
+generates:
+  ./generated/graphql-types.d.ts:
+    plugins:
+      - "typescript"
+    config:
+      scalars:
+        ID: string | number
+        Date: string
+        DateTime: string

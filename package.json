@@ -1,0 +1,24 @@
+{
+  "name": "@shortbox/contract",
+  "version": "0.1.0",
+  "private": true,
+  "types": "index.d.ts",
+  "main": "index.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    },
+    "./schema/shortbox.graphql": "./schema/shortbox.graphql"
+  },
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen:frontend": "graphql-codegen --config codegen.frontend.yml"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^6.1.0",
+    "@graphql-codegen/typescript": "^5.0.7",
+    "graphql": "^16.12.0",
+    "typescript": "^5.9.3"
+  }
+}
