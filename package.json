@@ -12,6 +12,9 @@
     "./schema/shortbox.graphql": "./schema/shortbox.graphql"
   },
   "scripts": {
+    "check:artifacts": "sh -c \"if git ls-files | grep -E '(^|/)(dist|build|logs|listen)/|\\\\.log$|(^|/)\\\\.output\\\\.txt$|(^|/)output\\\\.txt$'; then echo 'Remove tracked build/runtime artifacts before commit.'; exit 1; fi\"",
+    "precodegen": "npm run check:artifacts",
+    "precodegen:frontend": "npm run check:artifacts",
     "codegen": "graphql-codegen --config codegen.yml",
     "codegen:frontend": "graphql-codegen --config codegen.frontend.yml"
   },
