@@ -16,7 +16,10 @@
     "precodegen": "npm run check:artifacts",
     "precodegen:frontend": "npm run check:artifacts",
     "codegen": "graphql-codegen --config codegen.yml",
-    "codegen:frontend": "graphql-codegen --config codegen.frontend.yml"
+    "codegen:frontend": "graphql-codegen --config codegen.frontend.yml",
+    "codegen:check": "npm run codegen && git diff --exit-code -- generated/graphql-types.d.ts",
+    "test": "node --test tests/contract.test.js",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=index.js --test-coverage-lines=80 --test-coverage-functions=80 --test-coverage-branches=80 tests/contract.test.js"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^6.1.0",
