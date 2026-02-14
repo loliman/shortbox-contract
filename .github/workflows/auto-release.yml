@@ -1,6 +1,9 @@
 name: Auto Release Tag
 
 on:
+  push:
+    branches:
+      - main
   pull_request_target:
     types:
       - closed
@@ -17,7 +20,7 @@ concurrency:
 jobs:
   auto-release:
     name: Bump Version from PR Label and Create Tag
-    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' }}
+    if: ${{ github.event_name == 'push' || (github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -76,8 +79,15 @@ jobs:
       - name: Determine version bump from PR labels
         id: bump
         env:
-          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+          EVENT_NAME: ${{ github.event_name }}
+          LABELS: ${{ github.event_name == 'pull_request_target' && join(github.event.pull_request.labels.*.name, ' ') || '' }}
         run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            echo "Push event detected. Defaulting release bump to minor."
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           MAJOR=0
           MINOR=0
           PATCH=0
