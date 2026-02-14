@@ -5,18 +5,27 @@ on:
   pull_request:
     branches: [main, master]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: contract-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   contract-quality:
     name: Contract Quality
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      CI: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20'
           cache: 'npm'
@@ -32,10 +41,12 @@ jobs:
         run: npm run test:coverage
 
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v4
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: shortbox-contract-coverage
           path: coverage/
+          if-no-files-found: warn
 
       - name: Validate Sonar token
         env:
