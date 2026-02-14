@@ -31,8 +31,37 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
+      - name: Prepare npm config for public install
+        run: |
+          cat > "$RUNNER_TEMP/.npmrc-public" <<'EOF'
+          registry=https://registry.npmjs.org/
+          always-auth=false
+          EOF
+
+      - name: Detox npm auth config
+        run: |
+          rm -f "$HOME/.npmrc" .npmrc
+          : > "$RUNNER_TEMP/.npmrc-global"
+          npm config delete //registry.npmjs.org/:_authToken || true
+          npm config delete _auth || true
+          npm config delete _password || true
+          npm config delete username || true
+
+      - name: Debug npm auth context
+        run: |
+          echo "NPM_CONFIG_USERCONFIG=$NPM_CONFIG_USERCONFIG"
+          echo "NPM_CONFIG_GLOBALCONFIG=$NPM_CONFIG_GLOBALCONFIG"
+          npm config get registry
+          npm config get always-auth
+          echo "authToken check skipped (protected option)"
+
       - name: Install dependencies
-        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/.npmrc-public
+          NPM_CONFIG_GLOBALCONFIG: ${{ runner.temp }}/.npmrc-global
+        run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Verify codegen is up to date
         run: npm run codegen:check

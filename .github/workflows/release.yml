@@ -38,11 +38,38 @@ jobs:
           node-version: "20"
           cache: "npm"
           cache-dependency-path: package-lock.json
-          registry-url: https://npm.pkg.github.com
-          scope: "@shortbox"
+
+      - name: Prepare npm config for public install
+        run: |
+          cat > "$RUNNER_TEMP/.npmrc-public" <<'EOF'
+          registry=https://registry.npmjs.org/
+          always-auth=false
+          EOF
+
+      - name: Detox npm auth config
+        run: |
+          rm -f "$HOME/.npmrc" .npmrc
+          : > "$RUNNER_TEMP/.npmrc-global"
+          npm config delete //registry.npmjs.org/:_authToken || true
+          npm config delete _auth || true
+          npm config delete _password || true
+          npm config delete username || true
+
+      - name: Debug npm auth context
+        run: |
+          echo "NPM_CONFIG_USERCONFIG=$NPM_CONFIG_USERCONFIG"
+          echo "NPM_CONFIG_GLOBALCONFIG=$NPM_CONFIG_GLOBALCONFIG"
+          npm config get registry
+          npm config get always-auth
+          echo "authToken check skipped (protected option)"
 
       - name: Install dependencies
-        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/.npmrc-public
+          NPM_CONFIG_GLOBALCONFIG: ${{ runner.temp }}/.npmrc-global
+        run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Verify codegen is up to date
         run: npm run codegen:check
@@ -59,6 +86,13 @@ jobs:
           if-no-files-found: warn
 
       - name: Publish package to GitHub Packages
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+          registry-url: https://npm.pkg.github.com
+          scope: "@loliman"
+
+      - name: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm publish
