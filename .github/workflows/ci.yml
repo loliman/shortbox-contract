@@ -37,8 +37,17 @@ jobs:
           name: shortbox-contract-coverage
           path: coverage/
 
+      - name: Validate Sonar token
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "SONAR_TOKEN secret is not configured."
+            exit 1
+          fi
+
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v5
         with:
           args: >
             -Dsonar.qualitygate.wait=true
