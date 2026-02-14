@@ -39,10 +39,18 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
+      - name: Prepare npm config for public install
+        run: |
+          cat > "$RUNNER_TEMP/.npmrc-public" <<'EOF'
+          registry=https://registry.npmjs.org/
+          always-auth=false
+          EOF
+
       - name: Install dependencies
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/.npmrc-public
         run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Verify codegen is up to date
