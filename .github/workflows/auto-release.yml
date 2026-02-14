@@ -132,3 +132,27 @@ jobs:
 
           git push origin "HEAD:main"
           git push origin "${NEW_TAG}"
+
+      - name: Setup Node.js for GitHub Packages publish
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: "20"
+          registry-url: https://npm.pkg.github.com
+          scope: "@loliman"
+
+      - name: Publish package to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          NEW_TAG="v${NEW_VERSION}"
+          if gh release view "$NEW_TAG" >/dev/null 2>&1; then
+            echo "Release $NEW_TAG already exists."
+          else
+            gh release create "$NEW_TAG" --title "$NEW_TAG" --generate-notes
+          fi
