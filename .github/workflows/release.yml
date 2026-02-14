@@ -42,6 +42,8 @@ jobs:
           scope: "@loliman"
 
       - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm ci
 
       - name: Verify codegen is up to date
