@@ -42,11 +42,29 @@ jobs:
           always-auth=false
           EOF
 
+      - name: Detox npm auth config
+        run: |
+          rm -f "$HOME/.npmrc" .npmrc
+          : > "$RUNNER_TEMP/.npmrc-global"
+          npm config delete //registry.npmjs.org/:_authToken || true
+          npm config delete _auth || true
+          npm config delete _password || true
+          npm config delete username || true
+
+      - name: Debug npm auth context
+        run: |
+          echo "NPM_CONFIG_USERCONFIG=$NPM_CONFIG_USERCONFIG"
+          echo "NPM_CONFIG_GLOBALCONFIG=$NPM_CONFIG_GLOBALCONFIG"
+          npm config get registry
+          npm config get always-auth
+          npm config get //registry.npmjs.org/:_authToken
+
       - name: Install dependencies
         env:
           NODE_AUTH_TOKEN: ""
           NPM_TOKEN: ""
           NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/.npmrc-public
+          NPM_CONFIG_GLOBALCONFIG: ${{ runner.temp }}/.npmrc-global
         run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Verify codegen is up to date
