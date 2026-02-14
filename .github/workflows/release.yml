@@ -39,7 +39,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
           registry-url: https://npm.pkg.github.com
-          scope: "@shortbox"
+          scope: "@loliman"
 
       - name: Install dependencies
         run: npm ci

@@ -1,22 +1,23 @@
 name: Auto Release Tag
 
 on:
-  push:
-    branches:
-      - main
+  pull_request_target:
+    types:
+      - closed
 
 permissions:
   contents: write
   packages: write
+  pull-requests: read
 
 concurrency:
-  group: contract-auto-release-${{ github.ref }}
+  group: contract-auto-release-main
   cancel-in-progress: true
 
 jobs:
   auto-release:
-    name: Bump Version and Create Tag
-    if: ${{ github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip ci]') }}
+    name: Bump Version from PR Label and Create Tag
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -24,6 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
+          ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -33,7 +35,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
           registry-url: https://npm.pkg.github.com
-          scope: "@shortbox"
+          scope: "@loliman"
 
       - name: Install dependencies
         run: npm ci
@@ -44,12 +46,36 @@ jobs:
       - name: Run contract coverage gate (>=80%)
         run: npm run test:coverage
 
-      - name: Bump patch version
-        run: npm version patch --no-git-tag-version
+      - name: Determine version bump from PR labels
+        id: bump
+        env:
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+        run: |
+          MAJOR=0
+          MINOR=0
+          PATCH=0
+
+          for label in $LABELS; do
+            if [ "$label" = "major" ]; then MAJOR=1; fi
+            if [ "$label" = "minor" ]; then MINOR=1; fi
+            if [ "$label" = "patch" ]; then PATCH=1; fi
+          done
+
+          COUNT=$((MAJOR + MINOR + PATCH))
+          if [ "$COUNT" -ne 1 ]; then
+            echo "Exactly one PR label is required: major, minor, or patch."
+            echo "Found labels: $LABELS"
+            exit 1
+          fi
+
+          if [ "$MAJOR" -eq 1 ]; then echo "type=major" >> "$GITHUB_OUTPUT"; fi
+          if [ "$MINOR" -eq 1 ]; then echo "type=minor" >> "$GITHUB_OUTPUT"; fi
+          if [ "$PATCH" -eq 1 ]; then echo "type=patch" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Bump version
+        run: npm version "${{ steps.bump.outputs.type }}" --no-git-tag-version
 
       - name: Commit and tag release
-        env:
-          BRANCH_NAME: ${{ github.ref_name }}
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
           NEW_TAG="v${NEW_VERSION}"
@@ -61,5 +87,5 @@ jobs:
           git commit -m "chore(release): ${NEW_TAG} [skip ci]"
           git tag -a "${NEW_TAG}" -m "Release ${NEW_TAG}"
 
-          git push origin "HEAD:${BRANCH_NAME}"
+          git push origin "HEAD:main"
           git push origin "${NEW_TAG}"
