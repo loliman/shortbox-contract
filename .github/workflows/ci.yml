@@ -32,7 +32,10 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+        run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Verify codegen is up to date
         run: npm run codegen:check
