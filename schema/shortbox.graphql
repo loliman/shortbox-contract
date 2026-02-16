@@ -205,7 +205,7 @@ type Issue {
   verified: Boolean
   collected: Boolean
   comicguideid: String
-  createdAt: DateTime
+  createdat: DateTime
   updatedAt: DateTime
   series: Series
   stories: [Story]
