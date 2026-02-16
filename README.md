@@ -1,62 +1,32 @@
 # shortbox-contract
 
-Zentrale Contract-Quelle fuer das Shortbox-Oekosystem.
+Shared GraphQL contract package fuer das Shortbox-Oekosystem.
 
-Dieses Repo ist die Single Source of Truth fuer:
+## Ueberblick
 
-- GraphQL-Schema (`schema/shortbox.graphql`)
-- generierte TypeScript-Typen (`generated/graphql-types.d.ts`)
-- geteilte Contract-Typen fuer Frontend und Backend (`index.d.ts`)
+- Rolle: zentrale Contract-Quelle fuer Frontend und Backend
+- Paketname: `@loliman/shortbox-contract`
+- Enthalten: Schema, generierte Typen, stabile Typ-Exporte
 
-Publiziertes Paket:
+## Voraussetzungen
 
-- `@loliman/shortbox-contract`
-
-## Inhalt
-
-- `schema/shortbox.graphql`
-  Kanonisches GraphQL-Schema.
-- `generated/graphql-types.d.ts`
-  Aus dem Schema generierte TypeScript-Typen (GraphQL Code Generator).
-- `index.d.ts`
-  Stabile, oeffentliche Typ-Surface fuer Consumer.
-- `index.js`
-  Runtime-Platzhalter (leeres Objekt), damit Runtime-Imports stabil bleiben.
+- Node.js 20+
+- npm 10+
+- npm-Auth fuer GitHub Packages (`@loliman`)
 
 ## Installation
+
+```bash
+npm ci
+```
+
+Paket in anderen Projekten nutzen:
 
 ```bash
 npm i @loliman/shortbox-contract
 ```
 
-Fuer Installationen aus GitHub Packages muss npm fuer den Scope `@loliman` konfiguriert sein.
-
-## Nutzung in anderen Repos
-
-Schema importieren:
-
-```ts
-import schemaPath from "@loliman/shortbox-contract/schema/shortbox.graphql";
-```
-
-Typen importieren:
-
-```ts
-import type { Issue, Series, Publisher } from "@loliman/shortbox-contract";
-```
-
-## Entwicklung
-
-Voraussetzungen:
-
-- Node.js 20+
-- npm 10+
-
-Dependencies installieren:
-
-```bash
-npm ci
-```
+## Lokale Entwicklung
 
 Typen generieren:
 
@@ -64,46 +34,60 @@ Typen generieren:
 npm run codegen
 ```
 
-Pruefen, dass Codegen-Output aktuell ist:
+Codegen-Stand verifizieren:
 
 ```bash
 npm run codegen:check
 ```
 
-Tests:
+Tests lokal:
 
 ```bash
 npm test
 ```
 
-Coverage-Gate (>=80% lines/functions/branches/statements):
+Coverage-Gate lokal:
 
 ```bash
 npm run test:coverage
 ```
 
-## Release-Prozess
+## Wichtige Skripte
 
-Versionierung laeuft automatisch nach Merge/Push auf `main`:
+- `npm run codegen`: erzeugt `generated/graphql-types.d.ts` aus dem Schema
+- `npm run codegen:check`: prueft, dass der Codegen-Output committed ist
+- `npm test`: Contract-Tests
+- `npm run test:coverage`: Coverage-Run mit 80%-Gate
 
-- Workflow: `.github/workflows/auto-release.yml`
-- Label-gesteuert: `major`, `minor`, `patch`
-- Default ohne Label: `minor`
+## Projektstruktur
 
-Publishing laeuft auf Version-Tags:
+- `schema/shortbox.graphql`: kanonisches GraphQL-Schema
+- `generated/graphql-types.d.ts`: generierte TypeScript-Typen
+- `index.d.ts`: stabile oeffentliche Typ-Surface
+- `index.js`: Runtime-Platzhalter fuer stabile Runtime-Imports
+- `tests/`: Contract-Tests
 
-- Workflow: `.github/workflows/release.yml`
-- Trigger: `v*.*.*`
-- Ablauf: Tag/Version pruefen -> `npm pack --dry-run` -> `npm publish` nach GitHub Packages
+## CI und Releases
 
-## CI
+CI-Workflow:
 
-Qualitaetspipeline auf Push und Pull Request:
+- Datei: `.github/workflows/ci.yml`
+- Trigger: Push + Pull Request auf `main`
+- Checks: Codegen-Konsistenz, Coverage-Gate, SonarCloud
 
-- Workflow: `.github/workflows/ci.yml`
-- Checks: Codegen-Konsistenz, Coverage-Gate, SonarCloud-Analyse
+Auto-Release:
+
+- Datei: `.github/workflows/auto-release.yml`
+- Trigger: Merge/Push auf `main`
+- Verhalten: Label-basiertes Version-Bump (`major`, `minor`, `patch`, Default `minor`) + Tag
+
+Release:
+
+- Datei: `.github/workflows/release.yml`
+- Trigger: Tag `v*.*.*`
+- Verhalten: Tag/Version-Check -> `npm pack --dry-run` -> `npm publish` nach GitHub Packages
 
 ## Hinweise
 
-- `generated/graphql-types.d.ts` nicht manuell editieren.
-- Bei Schema-Aenderungen immer den aktualisierten Codegen-Output im selben Change mitliefern.
+- `generated/graphql-types.d.ts` nicht manuell bearbeiten.
+- Schema-Aenderungen immer zusammen mit aktualisiertem Codegen-Output committen.
