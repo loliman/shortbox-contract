@@ -370,15 +370,15 @@ export type Query = {
   arcs?: Maybe<ArcConnection>;
   export?: Maybe<Scalars['String']['output']>;
   individuals?: Maybe<IndividualConnection>;
-  issue?: Maybe<Issue>;
-  issues?: Maybe<IssueConnection>;
+  issueDetails?: Maybe<Issue>;
+  issueList?: Maybe<IssueConnection>;
   lastEdited?: Maybe<IssueConnection>;
   me?: Maybe<User>;
   nodes?: Maybe<Array<Maybe<Node>>>;
-  publisher?: Maybe<Publisher>;
-  publishers?: Maybe<PublisherConnection>;
-  series?: Maybe<SeriesConnection>;
-  seriesd?: Maybe<Series>;
+  publisherDetails?: Maybe<Publisher>;
+  publisherList?: Maybe<PublisherConnection>;
+  seriesDetails?: Maybe<Series>;
+  seriesList?: Maybe<SeriesConnection>;
 };
 
 
@@ -411,13 +411,13 @@ export type QueryIndividualsArgs = {
 };
 
 
-export type QueryIssueArgs = {
+export type QueryIssueDetailsArgs = {
   edit?: InputMaybe<Scalars['Boolean']['input']>;
   issue: IssueInput;
 };
 
 
-export type QueryIssuesArgs = {
+export type QueryIssueListArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<Filter>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -442,12 +442,12 @@ export type QueryNodesArgs = {
 };
 
 
-export type QueryPublisherArgs = {
+export type QueryPublisherDetailsArgs = {
   publisher: PublisherInput;
 };
 
 
-export type QueryPublishersArgs = {
+export type QueryPublisherListArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<Filter>;
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -456,17 +456,17 @@ export type QueryPublishersArgs = {
 };
 
 
-export type QuerySeriesArgs = {
+export type QuerySeriesDetailsArgs = {
+  series: SeriesInput;
+};
+
+
+export type QuerySeriesListArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   filter?: InputMaybe<Filter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   pattern?: InputMaybe<Scalars['String']['input']>;
   publisher: PublisherInput;
-};
-
-
-export type QuerySeriesdArgs = {
-  series: SeriesInput;
 };
 
 export type Series = {
