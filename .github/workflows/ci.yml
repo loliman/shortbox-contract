@@ -3,7 +3,7 @@ name: CI Pipeline
 on:
   push:
   pull_request:
-    branches: [main, master]
+    branches: [main]
 
 permissions:
   contents: write
@@ -64,7 +64,7 @@ jobs:
         run: npm ci --registry=https://registry.npmjs.org/
 
       - name: Auto format and push changes
-        if: ${{ github.actor != 'github-actions[bot]' && github.ref_name != 'main' && github.ref_name != 'master' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+        if: ${{ github.actor != 'github-actions[bot]' && github.ref_name != 'main' && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
         run: |
           npm run format --if-present
 

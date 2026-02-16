@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: write
-  packages: write
   pull-requests: read
 
 concurrency:
@@ -26,55 +25,15 @@ jobs:
     env:
       CI: true
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+      - uses: actions/checkout@v6
         with:
           ref: main
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@v6
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: package-lock.json
-
-      - name: Prepare npm config for public install
-        run: |
-          cat > "$RUNNER_TEMP/.npmrc-public" <<'EOF'
-          registry=https://registry.npmjs.org/
-          always-auth=false
-          EOF
-
-      - name: Detox npm auth config
-        run: |
-          rm -f "$HOME/.npmrc" .npmrc
-          : > "$RUNNER_TEMP/.npmrc-global"
-          npm config delete //registry.npmjs.org/:_authToken || true
-          npm config delete _auth || true
-          npm config delete _password || true
-          npm config delete username || true
-
-      - name: Debug npm auth context
-        run: |
-          echo "NPM_CONFIG_USERCONFIG=$NPM_CONFIG_USERCONFIG"
-          echo "NPM_CONFIG_GLOBALCONFIG=$NPM_CONFIG_GLOBALCONFIG"
-          npm config get registry
-          npm config get always-auth
-          echo "authToken check skipped (protected option)"
-
-      - name: Install dependencies
-        env:
-          NODE_AUTH_TOKEN: ""
-          NPM_TOKEN: ""
-          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/.npmrc-public
-          NPM_CONFIG_GLOBALCONFIG: ${{ runner.temp }}/.npmrc-global
-        run: npm ci --registry=https://registry.npmjs.org/
-
-      - name: Verify codegen is up to date
-        run: npm run codegen:check
-
-      - name: Run contract coverage gate (>=80%)
-        run: npm run test:coverage
 
       - name: Determine version bump from PR labels
         id: bump
@@ -132,27 +91,3 @@ jobs:
 
           git push origin "HEAD:main"
           git push origin "${NEW_TAG}"
-
-      - name: Setup Node.js for GitHub Packages publish
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: "20"
-          registry-url: https://npm.pkg.github.com
-          scope: "@loliman"
-
-      - name: Publish package to GitHub Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm publish
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          NEW_TAG="v${NEW_VERSION}"
-          if gh release view "$NEW_TAG" >/dev/null 2>&1; then
-            echo "Release $NEW_TAG already exists."
-          else
-            gh release create "$NEW_TAG" --title "$NEW_TAG" --generate-notes
-          fi
