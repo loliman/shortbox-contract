@@ -84,6 +84,7 @@ Release:
   - Commit + Tag `vX.Y.Z`
   - `npm pack --dry-run`
   - `npm publish` nach GitHub Packages
+  - GitHub Release fuer den Tag erzeugen (mit Notes)
 
 ## Hinweise
 
