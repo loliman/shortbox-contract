@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
         with:
           node-version: "20"
           cache: "npm"
@@ -134,7 +134,7 @@ jobs:
           git push origin "${NEW_TAG}"
 
       - name: Setup Node.js for GitHub Packages publish
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238
         with:
           node-version: "20"
           registry-url: https://npm.pkg.github.com
