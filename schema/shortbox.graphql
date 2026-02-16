@@ -13,12 +13,12 @@ type Query {
   me: User
   nodes(pattern: String!, us: Boolean!, offset: Int): [Node]
   export(filter: Filter!, type: String!): String
-  publishers(pattern: String, us: Boolean!, first: Int, after: String, filter: Filter): PublisherConnection
-  publisher(publisher: PublisherInput!): Publisher
-  series(pattern: String, publisher: PublisherInput!, first: Int, after: String, filter: Filter): SeriesConnection
-  seriesd(series: SeriesInput!): Series
-  issues(pattern: String, series: SeriesInput!, first: Int, after: String, filter: Filter): IssueConnection
-  issue(issue: IssueInput!, edit: Boolean): Issue
+  publisherList(pattern: String, us: Boolean!, first: Int, after: String, filter: Filter): PublisherConnection
+  publisherDetails(publisher: PublisherInput!): Publisher
+  seriesList(pattern: String, publisher: PublisherInput!, first: Int, after: String, filter: Filter): SeriesConnection
+  seriesDetails(series: SeriesInput!): Series
+  issueList(pattern: String, series: SeriesInput!, first: Int, after: String, filter: Filter): IssueConnection
+  issueDetails(issue: IssueInput!, edit: Boolean): Issue
   lastEdited(filter: Filter, first: Int, after: String, order: String, direction: String): IssueConnection
   arcs(pattern: String, type: String, first: Int, after: String): ArcConnection
   individuals(pattern: String, first: Int, after: String): IndividualConnection
