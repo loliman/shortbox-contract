@@ -1,16 +1,93 @@
 # shortbox-contract
 
-Zentrale Contract-Quelle fuer `shortbox-react` und `shortbox-graphql`.
+Shared GraphQL contract package fuer das Shortbox-Oekosystem.
 
-## Inhalt
+## Ueberblick
+
+- Rolle: zentrale Contract-Quelle fuer Frontend und Backend
+- Paketname: `@loliman/shortbox-contract`
+- Enthalten: Schema, generierte Typen, stabile Typ-Exporte
+
+## Voraussetzungen
+
+- Node.js 20+
+- npm 10+
+- npm-Auth fuer GitHub Packages (`@loliman`)
+
+## Installation
+
+```bash
+npm ci
+```
+
+Paket in anderen Projekten nutzen:
+
+```bash
+npm i @loliman/shortbox-contract
+```
+
+## Lokale Entwicklung
+
+Typen generieren:
+
+```bash
+npm run codegen
+```
+
+Codegen-Stand verifizieren:
+
+```bash
+npm run codegen:check
+```
+
+Tests lokal:
+
+```bash
+npm test
+```
+
+Coverage-Gate lokal:
+
+```bash
+npm run test:coverage
+```
+
+## Wichtige Skripte
+
+- `npm run codegen`: erzeugt `generated/graphql-types.d.ts` aus dem Schema
+- `npm run codegen:check`: prueft, dass der Codegen-Output committed ist
+- `npm test`: Contract-Tests
+- `npm run test:coverage`: Coverage-Run mit 80%-Gate
+
+## Projektstruktur
 
 - `schema/shortbox.graphql`: kanonisches GraphQL-Schema
-- `generated/graphql-types.d.ts`: generierte TypeScript-Typen aus dem Schema
-- `index.d.ts`: stabile Exporte fuer Frontend/Backend
+- `generated/graphql-types.d.ts`: generierte TypeScript-Typen
+- `index.d.ts`: stabile oeffentliche Typ-Surface
+- `index.js`: Runtime-Platzhalter fuer stabile Runtime-Imports
+- `tests/`: Contract-Tests
 
-## Workflow
+## CI und Releases
 
-1. `npm install` im Ordner `shortbox-contract`
-2. `npm run codegen` im Ordner `shortbox-contract`
+CI-Workflow:
 
-Frontend (`shortbox-react`) und Backend (`shortbox-graphql`) fuehren diesen Schritt ueber `contract:codegen` automatisch vor `build` aus.
+- Datei: `.github/workflows/ci.yml`
+- Trigger: Push + Pull Request auf `main`
+- Checks: Codegen-Konsistenz, Coverage-Gate, SonarCloud
+
+Auto-Release:
+
+- Datei: `.github/workflows/auto-release.yml`
+- Trigger: Merge/Push auf `main`
+- Verhalten: Label-basiertes Version-Bump (`major`, `minor`, `patch`, Default `minor`) + Tag
+
+Release:
+
+- Datei: `.github/workflows/release.yml`
+- Trigger: Tag `v*.*.*`
+- Verhalten: Tag/Version-Check -> `npm pack --dry-run` -> `npm publish` nach GitHub Packages
+
+## Hinweise
+
+- `generated/graphql-types.d.ts` nicht manuell bearbeiten.
+- Schema-Aenderungen immer zusammen mit aktualisiertem Codegen-Output committen.
