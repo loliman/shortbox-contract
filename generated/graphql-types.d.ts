@@ -191,7 +191,7 @@ export type Issue = {
   stories?: Maybe<Array<Maybe<Story>>>;
   tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   title?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  updatedat?: Maybe<Scalars['DateTime']['output']>;
   variant?: Maybe<Scalars['String']['output']>;
   variants?: Maybe<Array<Maybe<Issue>>>;
   verified?: Maybe<Scalars['Boolean']['output']>;
