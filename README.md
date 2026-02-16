@@ -67,7 +67,7 @@ npm run test:coverage
 - `index.js`: Runtime-Platzhalter fuer stabile Runtime-Imports
 - `tests/`: Contract-Tests
 
-## CI und Releases
+## CI und Release
 
 CI-Workflow:
 
@@ -75,17 +75,15 @@ CI-Workflow:
 - Trigger: Push + Pull Request auf `main`
 - Checks: Codegen-Konsistenz, Coverage-Gate, SonarCloud
 
-Auto-Release:
-
-- Datei: `.github/workflows/auto-release.yml`
-- Trigger: Merge/Push auf `main`
-- Verhalten: Label-basiertes Version-Bump (`major`, `minor`, `patch`, Default `minor`) + Tag
-
 Release:
 
 - Datei: `.github/workflows/release.yml`
-- Trigger: Tag `v*.*.*`
-- Verhalten: Tag/Version-Check -> `npm pack --dry-run` -> `npm publish` nach GitHub Packages
+- Trigger: Push auf `main` (inkl. Merge und Direkt-Push) oder manuell (`workflow_dispatch`)
+- Verhalten:
+  - Version-Bump aus PR-Labels (`major`, `minor`, `patch`, Default `minor`)
+  - Commit + Tag `vX.Y.Z`
+  - `npm pack --dry-run`
+  - `npm publish` nach GitHub Packages
 
 ## Hinweise
 
