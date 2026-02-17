@@ -213,7 +213,6 @@ type Issue {
   covers: [Cover]
   individuals: [Individual]
   arcs: [Arc]
-  features: [Feature]
   variants: [Issue]
   tags: [String]
 }
@@ -349,21 +348,4 @@ type Appearance {
   name: String
   type: String
   role: String
-}
-
-input FeatureInput {
-  id: String
-  number: Int!
-  individuals: [IndividualInput]
-  title: String
-  addinfo: String
-}
-
-type Feature {
-  id: ID
-  title: String
-  number: Int
-  addinfo: String
-  issue: Issue
-  individuals: [Individual]
 }

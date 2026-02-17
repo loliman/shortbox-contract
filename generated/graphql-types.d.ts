@@ -98,24 +98,6 @@ export type DateFilter = {
   date?: InputMaybe<Scalars['Date']['input']>;
 };
 
-export type Feature = {
-  __typename?: 'Feature';
-  addinfo?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  individuals?: Maybe<Array<Maybe<Individual>>>;
-  issue?: Maybe<Issue>;
-  number?: Maybe<Scalars['Int']['output']>;
-  title?: Maybe<Scalars['String']['output']>;
-};
-
-export type FeatureInput = {
-  addinfo?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['String']['input']>;
-  individuals?: InputMaybe<Array<InputMaybe<IndividualInput>>>;
-  number: Scalars['Int']['input'];
-  title?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type Filter = {
   and?: InputMaybe<Scalars['Boolean']['input']>;
   appearances?: InputMaybe<Scalars['String']['input']>;
@@ -177,7 +159,6 @@ export type Issue = {
   covers?: Maybe<Array<Maybe<Cover>>>;
   createdat?: Maybe<Scalars['DateTime']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
-  features?: Maybe<Array<Maybe<Feature>>>;
   format?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   individuals?: Maybe<Array<Maybe<Individual>>>;
