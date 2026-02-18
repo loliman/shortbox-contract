@@ -156,7 +156,6 @@ export type Issue = {
   collected?: Maybe<Scalars['Boolean']['output']>;
   comicguideid?: Maybe<Scalars['String']['output']>;
   cover?: Maybe<Cover>;
-  covers?: Maybe<Array<Maybe<Cover>>>;
   createdat?: Maybe<Scalars['DateTime']['output']>;
   currency?: Maybe<Scalars['String']['output']>;
   format?: Maybe<Scalars['String']['output']>;
