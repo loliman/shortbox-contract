@@ -120,8 +120,6 @@ type Publisher {
   seriesCount: Int
   issueCount: Int
   lastEdited(limit: Int): [Issue]
-  firstIssue: Issue
-  lastIssue: Issue
   active: Boolean
   startyear: Int
   endyear: Int
@@ -155,8 +153,6 @@ type Series {
   endyear: Int
   volume: Int
   issueCount: Int
-  firstIssue: Issue
-  lastIssue: Issue
   lastEdited(limit: Int): [Issue]
   active: Boolean
   addinfo: String
@@ -213,6 +209,8 @@ type Issue {
   updatedat: DateTime
   series: Series
   stories: [Story]
+  storyOwner: Issue
+  inheritsStories: Boolean
   cover: Cover
   individuals: [Individual]
   arcs: [Arc]

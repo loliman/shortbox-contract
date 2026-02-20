@@ -161,6 +161,7 @@ export type Issue = {
   format?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   individuals?: Maybe<Array<Maybe<Individual>>>;
+  inheritsStories?: Maybe<Scalars['Boolean']['output']>;
   isbn?: Maybe<Scalars['String']['output']>;
   limitation?: Maybe<Scalars['String']['output']>;
   number?: Maybe<Scalars['String']['output']>;
@@ -169,6 +170,7 @@ export type Issue = {
   releasedate?: Maybe<Scalars['Date']['output']>;
   series?: Maybe<Series>;
   stories?: Maybe<Array<Maybe<Story>>>;
+  storyOwner?: Maybe<Issue>;
   tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   title?: Maybe<Scalars['String']['output']>;
   updatedat?: Maybe<Scalars['DateTime']['output']>;
@@ -203,7 +205,7 @@ export type IssueInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
   releasedate?: InputMaybe<Scalars['Date']['input']>;
   series?: InputMaybe<SeriesInput>;
-  stories?: InputMaybe<Array<InputMaybe<Story>>>;
+  stories?: InputMaybe<Array<InputMaybe<StoryInput>>>;
   title?: InputMaybe<Scalars['String']['input']>;
   variant?: InputMaybe<Scalars['String']['input']>;
   verified?: InputMaybe<Scalars['Boolean']['input']>;
@@ -309,11 +311,9 @@ export type Publisher = {
   active?: Maybe<Scalars['Boolean']['output']>;
   addinfo?: Maybe<Scalars['String']['output']>;
   endyear?: Maybe<Scalars['Int']['output']>;
-  firstIssue?: Maybe<Issue>;
   id?: Maybe<Scalars['ID']['output']>;
   issueCount?: Maybe<Scalars['Int']['output']>;
   lastEdited?: Maybe<Array<Maybe<Issue>>>;
-  lastIssue?: Maybe<Issue>;
   name?: Maybe<Scalars['String']['output']>;
   series?: Maybe<Array<Maybe<Series>>>;
   seriesCount?: Maybe<Scalars['Int']['output']>;
@@ -458,11 +458,9 @@ export type Series = {
   active?: Maybe<Scalars['Boolean']['output']>;
   addinfo?: Maybe<Scalars['String']['output']>;
   endyear?: Maybe<Scalars['Int']['output']>;
-  firstIssue?: Maybe<Issue>;
   id?: Maybe<Scalars['ID']['output']>;
   issueCount?: Maybe<Scalars['Int']['output']>;
   lastEdited?: Maybe<Array<Maybe<Issue>>>;
-  lastIssue?: Maybe<Issue>;
   publisher?: Maybe<Publisher>;
   startyear?: Maybe<Scalars['Int']['output']>;
   title?: Maybe<Scalars['String']['output']>;
