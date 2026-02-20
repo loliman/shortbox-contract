@@ -191,6 +191,8 @@ export type IssueEdge = {
 
 export type IssueInput = {
   addinfo?: InputMaybe<Scalars['String']['input']>;
+  collected?: InputMaybe<Scalars['Boolean']['input']>;
+  comicguideid?: InputMaybe<Scalars['Int']['input']>;
   currency?: InputMaybe<Scalars['String']['input']>;
   format?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
@@ -201,8 +203,10 @@ export type IssueInput = {
   price?: InputMaybe<Scalars['Float']['input']>;
   releasedate?: InputMaybe<Scalars['Date']['input']>;
   series?: InputMaybe<SeriesInput>;
+  stories?: InputMaybe<Array<InputMaybe<Story>>>;
   title?: InputMaybe<Scalars['String']['input']>;
   variant?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type LoginInput = {
