@@ -190,7 +190,7 @@ input IssueInput {
   collected: Boolean
   comicguideid: Int
   series: SeriesInput
-  stories: [Story]
+  stories: [StoryInput]
 }
 
 type Issue {
