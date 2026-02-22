@@ -13,6 +13,7 @@ type Query {
   me: User
   nodes(pattern: String!, us: Boolean!, offset: Int): [Node]
   export(filter: Filter!, type: String!): String
+  filterCount(filter: Filter!): Int!
   publisherList(pattern: String, us: Boolean!, first: Int, after: String, filter: Filter): PublisherConnection
   publisherDetails(publisher: PublisherInput!): Publisher
   seriesList(pattern: String, publisher: PublisherInput!, first: Int, after: String, filter: Filter): SeriesConnection
