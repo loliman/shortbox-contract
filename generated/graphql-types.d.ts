@@ -16,6 +16,39 @@ export type Scalars = {
   DateTime: { input: string; output: string; }
 };
 
+export type AdminTask = {
+  __typename?: 'AdminTask';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  key: Scalars['String']['output'];
+  lastRun?: Maybe<AdminTaskRun>;
+  name: Scalars['String']['output'];
+  runs: Array<AdminTaskRun>;
+};
+
+
+export type AdminTaskRunsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AdminTaskRun = {
+  __typename?: 'AdminTaskRun';
+  details?: Maybe<Scalars['String']['output']>;
+  dryRun: Scalars['Boolean']['output'];
+  finishedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  startedAt: Scalars['DateTime']['output'];
+  status: AdminTaskRunStatus;
+  summary: Scalars['String']['output'];
+  taskKey: Scalars['String']['output'];
+  taskName: Scalars['String']['output'];
+};
+
+export enum AdminTaskRunStatus {
+  Failed = 'FAILED',
+  Success = 'SUCCESS'
+}
+
 export type Appearance = {
   __typename?: 'Appearance';
   id?: Maybe<Scalars['ID']['output']>;
@@ -237,6 +270,7 @@ export type Mutation = {
   editSeries?: Maybe<Series>;
   login: User;
   logout: Scalars['Boolean']['output'];
+  runAdminTask: AdminTaskRun;
 };
 
 
@@ -290,6 +324,11 @@ export type MutationEditSeriesArgs = {
 
 export type MutationLoginArgs = {
   credentials: LoginInput;
+};
+
+
+export type MutationRunAdminTaskArgs = {
+  input: RunAdminTaskInput;
 };
 
 export type Node = {
@@ -357,9 +396,11 @@ export type PublisherInput = {
 export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']['output']>;
+  adminTasks: Array<AdminTask>;
   apps?: Maybe<AppearanceConnection>;
   arcs?: Maybe<ArcConnection>;
   export?: Maybe<Scalars['String']['output']>;
+  filterCount: Scalars['Int']['output'];
   individuals?: Maybe<IndividualConnection>;
   issueDetails?: Maybe<Issue>;
   issueList?: Maybe<IssueConnection>;
@@ -370,6 +411,11 @@ export type Query = {
   publisherList?: Maybe<PublisherConnection>;
   seriesDetails?: Maybe<Series>;
   seriesList?: Maybe<SeriesConnection>;
+};
+
+
+export type QueryAdminTasksArgs = {
+  limitRuns?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -392,6 +438,11 @@ export type QueryArcsArgs = {
 export type QueryExportArgs = {
   filter: Filter;
   type: Scalars['String']['input'];
+};
+
+
+export type QueryFilterCountArgs = {
+  filter: Filter;
 };
 
 
@@ -458,6 +509,22 @@ export type QuerySeriesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   pattern?: InputMaybe<Scalars['String']['input']>;
   publisher: PublisherInput;
+};
+
+export enum ReimportScopeKind {
+  AllUs = 'ALL_US',
+  Issue = 'ISSUE',
+  Publisher = 'PUBLISHER',
+  Series = 'SERIES'
+}
+
+export type RunAdminTaskInput = {
+  dryRun?: InputMaybe<Scalars['Boolean']['input']>;
+  issueId?: InputMaybe<Scalars['ID']['input']>;
+  publisherId?: InputMaybe<Scalars['ID']['input']>;
+  reimportScopeKind?: InputMaybe<ReimportScopeKind>;
+  seriesId?: InputMaybe<Scalars['ID']['input']>;
+  taskKey: Scalars['String']['input'];
 };
 
 export type Series = {

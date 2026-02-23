@@ -11,6 +11,7 @@ type PageInfo {
 type Query {
   _empty: String
   me: User
+  adminTasks(limitRuns: Int): [AdminTask!]!
   nodes(pattern: String!, us: Boolean!, offset: Int): [Node]
   export(filter: Filter!, type: String!): String
   filterCount(filter: Filter!): Int!
@@ -30,6 +31,8 @@ type Mutation {
   _empty: String
   login(credentials: LoginInput!): User!
   logout: Boolean!
+  runAdminTask(input: RunAdminTaskInput!): AdminTaskRun!
+  releaseAllAdminTaskLocks: Int!
   deletePublisher(item: PublisherInput!): Boolean
   createPublisher(item: PublisherInput!): Publisher
   editPublisher(old: PublisherInput!, item: PublisherInput!): Publisher
@@ -99,6 +102,48 @@ input LoginInput {
 
 type User {
   id: ID
+}
+
+enum AdminTaskRunStatus {
+  SUCCESS
+  FAILED
+}
+
+enum ReimportScopeKind {
+  ALL_US
+  PUBLISHER
+  SERIES
+  ISSUE
+}
+
+type AdminTask {
+  id: ID!
+  key: String!
+  name: String!
+  description: String
+  lastRun: AdminTaskRun
+  runs(limit: Int): [AdminTaskRun!]!
+}
+
+type AdminTaskRun {
+  id: ID!
+  taskKey: String!
+  taskName: String!
+  startedAt: DateTime!
+  finishedAt: DateTime
+  dryRun: Boolean!
+  status: AdminTaskRunStatus!
+  summary: String!
+  details: String
+}
+
+input RunAdminTaskInput {
+  taskKey: String!
+  dryRun: Boolean
+  reimportScopeKind: ReimportScopeKind
+  publisherId: ID
+  seriesId: ID
+  issueId: ID
 }
 
 type PublisherConnection {
