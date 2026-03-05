@@ -229,6 +229,7 @@ input IssueInput {
   format: String
   variant: String
   releasedate: Date
+  legacy_number: String
   pages: Int
   price: Float
   currency: String
@@ -246,6 +247,7 @@ type Issue {
   id: ID
   title: String
   number: String
+  legacy_number: String
   format: String
   variant: String
   releasedate: Date
