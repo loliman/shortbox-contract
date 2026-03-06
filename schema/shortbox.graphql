@@ -22,9 +22,11 @@ type Query {
   issueList(pattern: String, series: SeriesInput!, first: Int, after: String, filter: Filter): IssueConnection
   issueDetails(issue: IssueInput!, edit: Boolean): Issue
   lastEdited(filter: Filter, first: Int, after: String, order: String, direction: String): IssueConnection
+  genres(pattern: String, first: Int, after: String): [String]
   arcs(pattern: String, type: String, first: Int, after: String): ArcConnection
   individuals(pattern: String, first: Int, after: String): IndividualConnection
   apps(pattern: String, type: String, first: Int, after: String): AppearanceConnection
+  realities(pattern: String, first: Int, after: String): RealityConnection
 }
 
 type Mutation {
@@ -68,10 +70,12 @@ input Filter {
   releasedates: [DateFilter]
   publishers: [PublisherInput]
   series: [SeriesInput]
+  genres: [String]
   numbers: [NumberFilter]
   arcs: [ArcInput]
   individuals: [IndividualInput]
   appearances: [AppearanceInput]
+  realities: [RealityInput]
   firstPrint: Boolean
   notFirstPrint: Boolean
   onlyPrint: Boolean
@@ -195,6 +199,7 @@ input SeriesInput {
   startyear: Int
   endyear: Int
   volume: Int
+  genre: String
   addinfo: String
   publisher: PublisherInput
 }
@@ -205,6 +210,7 @@ type Series {
   startyear: Int
   endyear: Int
   volume: Int
+  genre: String
   issueCount: Int
   lastEdited(limit: Int): [Issue]
   active: Boolean
@@ -398,4 +404,24 @@ type Appearance {
   name: String
   type: String
   role: String
+}
+
+type RealityConnection {
+  edges: [RealityEdge]
+  pageInfo: PageInfo!
+}
+
+type RealityEdge {
+  cursor: String!
+  node: Reality
+}
+
+input RealityInput {
+  id: String
+  name: String
+}
+
+type Reality {
+  id: ID
+  name: String
 }

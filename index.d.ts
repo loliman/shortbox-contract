@@ -14,6 +14,7 @@ import type {
   PageInfo,
   Publisher,
   PublisherConnection,
+  RealityConnection,
   Series,
   SeriesConnection,
 } from "./generated/graphql-types";
@@ -68,6 +69,10 @@ export interface AppsQueryData {
 
 export interface ArcsQueryData {
   arcs: ArcConnection;
+}
+
+export interface RealitiesQueryData {
+  realities: RealityConnection;
 }
 
 export interface LastEditedQueryData {

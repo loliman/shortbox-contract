@@ -137,6 +137,7 @@ export type Filter = {
   exclusive?: InputMaybe<Scalars['Boolean']['input']>;
   firstPrint?: InputMaybe<Scalars['Boolean']['input']>;
   formats?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  genres?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   individuals?: InputMaybe<Array<InputMaybe<IndividualInput>>>;
   noComicguideId?: InputMaybe<Scalars['Boolean']['input']>;
   noContent?: InputMaybe<Scalars['Boolean']['input']>;
@@ -158,6 +159,7 @@ export type Filter = {
   onlyTb?: InputMaybe<Scalars['Boolean']['input']>;
   otherOnlyTb?: InputMaybe<Scalars['Boolean']['input']>;
   publishers?: InputMaybe<Array<InputMaybe<PublisherInput>>>;
+  realities?: InputMaybe<Array<InputMaybe<RealityInput>>>;
   releasedates?: InputMaybe<Array<InputMaybe<DateFilter>>>;
   reprint?: InputMaybe<Scalars['Boolean']['input']>;
   series?: InputMaybe<Array<InputMaybe<SeriesInput>>>;
@@ -203,6 +205,7 @@ export type Issue = {
   individuals?: Maybe<Array<Maybe<Individual>>>;
   inheritsStories?: Maybe<Scalars['Boolean']['output']>;
   isbn?: Maybe<Scalars['String']['output']>;
+  legacy_number?: Maybe<Scalars['String']['output']>;
   limitation?: Maybe<Scalars['String']['output']>;
   number?: Maybe<Scalars['String']['output']>;
   pages?: Maybe<Scalars['Int']['output']>;
@@ -239,6 +242,7 @@ export type IssueInput = {
   format?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   isbn?: InputMaybe<Scalars['String']['input']>;
+  legacy_number?: InputMaybe<Scalars['String']['input']>;
   limitation?: InputMaybe<Scalars['String']['input']>;
   number?: InputMaybe<Scalars['String']['input']>;
   pages?: InputMaybe<Scalars['Int']['input']>;
@@ -270,6 +274,7 @@ export type Mutation = {
   editSeries?: Maybe<Series>;
   login: User;
   logout: Scalars['Boolean']['output'];
+  releaseAllAdminTaskLocks: Scalars['Int']['output'];
   runAdminTask: AdminTaskRun;
 };
 
@@ -401,6 +406,7 @@ export type Query = {
   arcs?: Maybe<ArcConnection>;
   export?: Maybe<Scalars['String']['output']>;
   filterCount: Scalars['Int']['output'];
+  genres?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   individuals?: Maybe<IndividualConnection>;
   issueDetails?: Maybe<Issue>;
   issueList?: Maybe<IssueConnection>;
@@ -409,6 +415,7 @@ export type Query = {
   nodes?: Maybe<Array<Maybe<Node>>>;
   publisherDetails?: Maybe<Publisher>;
   publisherList?: Maybe<PublisherConnection>;
+  realities?: Maybe<RealityConnection>;
   seriesDetails?: Maybe<Series>;
   seriesList?: Maybe<SeriesConnection>;
 };
@@ -443,6 +450,13 @@ export type QueryExportArgs = {
 
 export type QueryFilterCountArgs = {
   filter: Filter;
+};
+
+
+export type QueryGenresArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  pattern?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -498,6 +512,13 @@ export type QueryPublisherListArgs = {
 };
 
 
+export type QueryRealitiesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  pattern?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QuerySeriesDetailsArgs = {
   series: SeriesInput;
 };
@@ -509,6 +530,29 @@ export type QuerySeriesListArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   pattern?: InputMaybe<Scalars['String']['input']>;
   publisher: PublisherInput;
+};
+
+export type Reality = {
+  __typename?: 'Reality';
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+};
+
+export type RealityConnection = {
+  __typename?: 'RealityConnection';
+  edges?: Maybe<Array<Maybe<RealityEdge>>>;
+  pageInfo: PageInfo;
+};
+
+export type RealityEdge = {
+  __typename?: 'RealityEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Reality>;
+};
+
+export type RealityInput = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum ReimportScopeKind {
@@ -532,6 +576,7 @@ export type Series = {
   active?: Maybe<Scalars['Boolean']['output']>;
   addinfo?: Maybe<Scalars['String']['output']>;
   endyear?: Maybe<Scalars['Int']['output']>;
+  genre?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   issueCount?: Maybe<Scalars['Int']['output']>;
   lastEdited?: Maybe<Array<Maybe<Issue>>>;
@@ -561,6 +606,7 @@ export type SeriesEdge = {
 export type SeriesInput = {
   addinfo?: InputMaybe<Scalars['String']['input']>;
   endyear?: InputMaybe<Scalars['Int']['input']>;
+  genre?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   publisher?: InputMaybe<PublisherInput>;
   startyear?: InputMaybe<Scalars['Int']['input']>;
