@@ -14,6 +14,7 @@ export type Scalars = {
   Float: { input: number; output: number; }
   Date: { input: string; output: string; }
   DateTime: { input: string; output: string; }
+  JSON: { input: any; output: any; }
 };
 
 export type AdminTask = {
@@ -101,6 +102,21 @@ export type ArcInput = {
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
 };
+
+export type ChangeRequest = {
+  __typename?: 'ChangeRequest';
+  changeRequest: Scalars['JSON']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  issueId: Scalars['ID']['output'];
+  type: ChangeRequestType;
+};
+
+export enum ChangeRequestType {
+  Issue = 'ISSUE',
+  Publisher = 'PUBLISHER',
+  Series = 'SERIES'
+}
 
 export type Cover = {
   __typename?: 'Cover';
@@ -263,19 +279,27 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   _empty?: Maybe<Scalars['String']['output']>;
+  acceptChangeRequest?: Maybe<Issue>;
   createIssue?: Maybe<Issue>;
   createPublisher?: Maybe<Publisher>;
   createSeries?: Maybe<Series>;
   deleteIssue?: Maybe<Scalars['Boolean']['output']>;
   deletePublisher?: Maybe<Scalars['Boolean']['output']>;
   deleteSeries?: Maybe<Scalars['Boolean']['output']>;
+  discardChangeRequest: Scalars['Boolean']['output'];
   editIssue?: Maybe<Issue>;
   editPublisher?: Maybe<Publisher>;
   editSeries?: Maybe<Series>;
   login: User;
   logout: Scalars['Boolean']['output'];
   releaseAllAdminTaskLocks: Scalars['Int']['output'];
+  reportError: ChangeRequest;
   runAdminTask: AdminTaskRun;
+};
+
+
+export type MutationAcceptChangeRequestArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
@@ -309,6 +333,11 @@ export type MutationDeleteSeriesArgs = {
 };
 
 
+export type MutationDiscardChangeRequestArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationEditIssueArgs = {
   item: IssueInput;
   old: IssueInput;
@@ -329,6 +358,11 @@ export type MutationEditSeriesArgs = {
 
 export type MutationLoginArgs = {
   credentials: LoginInput;
+};
+
+
+export type MutationReportErrorArgs = {
+  input: ReportErrorInput;
 };
 
 
@@ -404,6 +438,8 @@ export type Query = {
   adminTasks: Array<AdminTask>;
   apps?: Maybe<AppearanceConnection>;
   arcs?: Maybe<ArcConnection>;
+  changeRequestCount: Scalars['Int']['output'];
+  changeRequests: Array<ChangeRequest>;
   export?: Maybe<Scalars['String']['output']>;
   filterCount: Scalars['Int']['output'];
   genres?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
@@ -439,6 +475,20 @@ export type QueryArcsArgs = {
   first?: InputMaybe<Scalars['Int']['input']>;
   pattern?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryChangeRequestCountArgs = {
+  type?: InputMaybe<ChangeRequestType>;
+};
+
+
+export type QueryChangeRequestsArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  direction?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  order?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<ChangeRequestType>;
 };
 
 
@@ -561,6 +611,11 @@ export enum ReimportScopeKind {
   Publisher = 'PUBLISHER',
   Series = 'SERIES'
 }
+
+export type ReportErrorInput = {
+  issue: IssueInput;
+  item: IssueInput;
+};
 
 export type RunAdminTaskInput = {
   dryRun?: InputMaybe<Scalars['Boolean']['input']>;

@@ -1,5 +1,6 @@
 scalar Date
 scalar DateTime
+scalar JSON
 
 type PageInfo {
   hasNextPage: Boolean!
@@ -27,6 +28,14 @@ type Query {
   individuals(pattern: String, first: Int, after: String): IndividualConnection
   apps(pattern: String, type: String, first: Int, after: String): AppearanceConnection
   realities(pattern: String, first: Int, after: String): RealityConnection
+  changeRequests(
+    first: Int
+    after: String
+    order: String
+    direction: String
+    type: ChangeRequestType
+  ): [ChangeRequest!]!
+  changeRequestCount(type: ChangeRequestType): Int!
 }
 
 type Mutation {
@@ -44,6 +53,9 @@ type Mutation {
   deleteIssue(item: IssueInput!): Boolean
   createIssue(item: IssueInput!): Issue
   editIssue(old: IssueInput!, item: IssueInput!): Issue
+  reportError(input: ReportErrorInput!): ChangeRequest!
+  acceptChangeRequest(id: ID!): Issue
+  discardChangeRequest(id: ID!): Boolean!
 }
 
 type Node {
@@ -148,6 +160,25 @@ input RunAdminTaskInput {
   publisherId: ID
   seriesId: ID
   issueId: ID
+}
+
+enum ChangeRequestType {
+  SERIES
+  ISSUE
+  PUBLISHER
+}
+
+input ReportErrorInput {
+  issue: IssueInput!
+  item: IssueInput!
+}
+
+type ChangeRequest {
+  id: ID!
+  issueId: ID!
+  createdAt: DateTime!
+  type: ChangeRequestType!
+  changeRequest: JSON!
 }
 
 type PublisherConnection {

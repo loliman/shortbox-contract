@@ -90,3 +90,16 @@ Release:
 
 - `generated/graphql-types.d.ts` nicht manuell bearbeiten.
 - Schema-Aenderungen immer zusammen mit aktualisiertem Codegen-Output committen.
+
+## Change Requests API
+
+Ergaenzt fuer den Fehler-Melde- und Review-Flow:
+
+- Neue Mutation `reportError(input: ReportErrorInput!): ChangeRequest!`
+- Neue Mutation `acceptChangeRequest(id: ID!): Issue`
+- Neue Mutation `discardChangeRequest(id: ID!): Boolean!`
+- Neue Query `changeRequests(...)` (Liste)
+- Neue Query `changeRequestCount(type: ChangeRequestType)` (Badge-Count)
+- Neuer Typ `ChangeRequest` mit `id`, `issueId`, `createdAt`, `type`, `changeRequest`
+- Neuer Enum `ChangeRequestType` (`SERIES`, `ISSUE`, `PUBLISHER`)
+- Neuer Scalar `JSON` fuer strukturierte Change-Request-Payloads
