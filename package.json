@@ -37,7 +37,7 @@
     "@graphql-codegen/cli": "^6.2.1",
     "@graphql-codegen/typescript": "^5.0.9",
     "c8": "^11.0.0",
-    "graphql": "^16.13.1",
+    "graphql": "^16.14.2",
     "typescript": "^5.9.3"
   }
 }
